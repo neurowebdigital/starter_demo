@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Contact — Breeze Café</title>
+  <meta name="description" content="Say hello to Breeze Café. Message us on WhatsApp or use the contact form — we reply within a business day.">
+  <meta name="theme-color" content="#F5EFE7">
+  <meta name="color-scheme" content="light">
+
+  <!-- Base kit -->
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/ui.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== Page polish ===== */
+    .hero--soft{
+      margin-left:calc(50% - 50vw);
+      margin-right:calc(50% - 50vw);
+      width:100vw;
+      background:linear-gradient(180deg,#fff,color-mix(in hsl,var(--nw-accent) 6%,#fff));
+      border-bottom:1px solid var(--beige);
+      overflow:hidden;
+    }
+    .hero--soft .wrap{
+      display:grid;
+      gap:clamp(18px,4vw,28px);
+      grid-template-columns:1.1fr .9fr;
+      align-items:center;
+    }
+    @media (max-width:900px){
+      .hero--soft .wrap{ grid-template-columns:1fr; }
+    }
+
+    .hero-card{
+      background:#fff;
+      border:1px solid var(--beige);
+      border-radius:var(--radius-xl);
+      padding:clamp(16px,3vw,22px);
+      box-shadow:var(--shadow);
+    }
+
+    /* Sticky glass nav (aligned with other pages) */
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(140%) blur(8px);
+      -webkit-backdrop-filter:saturate(140%) blur(8px);
+      background:color-mix(in hsl,#ffffff 82%,transparent);
+      border-bottom:1px solid color-mix(in hsl,var(--beige) 55%,transparent);
+    }
+    .nav .nav__in{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.8rem;
+      min-height:58px;
+    }
+    .nav[data-scrolled="true"] .nav__in{
+      box-shadow:0 6px 18px rgba(0,0,0,.06);
+    }
+    .nav .nav__links{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+    }
+    .nav .nav__links .btn{
+      --h:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height:var(--h);
+      line-height:var(--h);
+      padding:0 .9rem;
+      border-radius:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    /* Active state for normal text links only (Home, About, Menu) */
+    .nav .nav__links a[aria-current="page"]:not(.btn){
+      font-weight:700;
+      color:var(--nw-accent);
+    }
+
+    /* Active state for the CTA button (WhatsApp / Contact) */
+    .nav .nav__links .btn[aria-current="page"]{
+      font-weight:700;
+      color:#fff;               /* keep high contrast on brown button */
+      box-shadow:0 0 0 1px rgba(0,0,0,.06);
+    }
+
+    .nav__toggle{
+      border-radius:12px;
+      border:1px solid var(--beige);
+      background:#fff;
+      padding:.35rem .6rem;
+    }
+    @media (max-width:900px){
+      .nav .nav__links{ display:none; }
+      .nav[aria-expanded="true"] .nav__links{
+        display:flex;
+        flex-direction:column;
+        align-items:stretch;
+        gap:.6rem;
+        padding:.8rem 0;
+      }
+      .nav .nav__links .btn{ width:100%; }
+    }
+
+    /* ===== Contact layout ===== */
+    .contact-grid{
+      display:grid;
+      gap:clamp(16px,3vw,22px);
+      grid-template-columns:1fr 1fr;
+      align-items:stretch;
+    }
+    @media (max-width:900px){
+      .contact-grid{ grid-template-columns:1fr; }
+    }
+
+    /* Make both cards full-height with bottom-pinned buttons */
+    form.hero-card,
+    .contact-card{
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+    }
+
+    /* ===== Form styling ===== */
+    form.hero-card{
+      --field-bg:#fff;
+      --field-bd:var(--beige);
+      --field-bd-hover:color-mix(in hsl,var(--nw-accent) 25%,#ddd);
+      --field-ring:color-mix(in hsl,var(--nw-accent) 55%,#fff);
+      --field-ph:#8b8b8b;
+      --field-rad:14px;
+      --field-pad:14px;
+      --row-gap:clamp(10px,2.4vw,14px);
+      position:relative;
+    }
+
+    .label{
+      display:block;
+      font-weight:700;
+      margin:10px 0 6px;
+    }
+    .label:first-of-type{ margin-top:0; }
+
+    .input,
+    .textarea{
+      -webkit-appearance:none;
+      appearance:none;
+      width:100%;
+      box-sizing:border-box;
+      background:var(--field-bg);
+      border:1px solid var(--field-bd);
+      border-radius:var(--field-rad);
+      padding:var(--field-pad) calc(var(--field-pad) + 2px);
+      font:inherit;
+      color:inherit;
+      line-height:1.25;
+      transition:border-color .15s ease, box-shadow .15s ease, background-color .2s ease;
+      outline:0;
+    }
+    .input:hover,
+    .textarea:hover{
+      border-color:var(--field-bd-hover);
+    }
+    .input:focus-visible,
+    .textarea:focus-visible{
+      border-color:var(--field-ring);
+      box-shadow:0 0 0 3px color-mix(in hsl,var(--field-ring) 35%,transparent);
+      background:#fff;
+    }
+    .input::placeholder,
+    .textarea::placeholder{
+      color:var(--field-ph);
+      opacity:.9;
+    }
+
+    .textarea{
+      resize:vertical;
+      min-height:120px;
+    }
+
+    /* Row / columns */
+    .form-row{
+      display:grid;
+      gap:var(--row-gap);
+    }
+    .form-row.cols-2{
+      grid-template-columns:1fr 1fr;
+    }
+    @media (max-width:720px){
+      .form-row.cols-2{ grid-template-columns:1fr; }
+    }
+
+    /* Helper + status */
+    .help{
+      color:#6a6a6a;
+      font-size:.9rem;
+      margin-top:.35rem;
+    }
+    .status{
+      font-weight:800;
+      font-size:.9rem;
+      margin-bottom:.4rem;
+    }
+    .status--ok{ color:#0a8f44; }
+    .status--err{ color:#a61b1b; }
+
+    /* Invalid states */
+    .input:required:user-invalid,
+    .textarea:required:user-invalid{
+      border-color:#e79aa1;
+      box-shadow:0 0 0 2px rgba(231,154,161,.18);
+    }
+
+    /* Button row / clusters */
+    .cluster{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      flex-wrap:wrap;
+    }
+    .cluster .btn,
+    .cluster .btn-outline{
+      min-height:40px;
+      border-radius:12px;
+    }
+    @media (max-width:520px){
+      .cluster .btn,
+      .cluster .btn-outline{
+        flex:1 1 100%;
+        text-align:center;
+        justify-content:center;
+      }
+    }
+
+    /* Form footer pinned to bottom, matching map card */
+    .form-footer{
+      margin-top:auto;
+      padding-top:.8rem;
+    }
+
+    /* Contact / map card */
+    .contact-card{
+      background:#fff;
+      border:1px solid var(--beige);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:clamp(16px,3vw,22px);
+      gap:12px;
+    }
+    .contact-card .h3{
+      margin:0 0 .25rem;
+      font-size:1rem;
+    }
+    .contact-card .muted{
+      font-size:.9rem;
+    }
+
+    .map{
+      border:1px solid var(--beige);
+      border-radius:12px;
+      overflow:hidden;
+      aspect-ratio:16/9;
+      background:#f2eee9;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:.6rem;
+    }
+    .map img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* Actions pinned to bottom of right card (buttons align with form) */
+    .contact-actions{
+      margin-top:auto;
+      padding-top:.8rem;
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      flex-wrap:wrap;
+    }
+    .contact-actions .btn,
+    .contact-actions .btn-outline{
+      min-width:150px;
+      justify-content:center;
+      box-shadow:none;
+    }
+    @media (max-width:520px){
+      .contact-actions .btn,
+      .contact-actions .btn-outline{
+        flex:1 1 100%;
+      }
+    }
+
+    /* CTA bar */
+    .cta-bar{
+      position:sticky;
+      bottom:0;
+      margin-left:calc(50% - 50vw);
+      margin-right:calc(50% - 50vw);
+      width:100vw;
+      background:#fff;
+      border-top:1px solid var(--beige);
+      padding:.8rem 0;
+      z-index:5;
+    }
+
+    /* Honeypot (hide from humans) */
+    .honeypot{
+      position:absolute;
+      left:-9999px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+
+    /* No-JS reveal fallback */
+    .no-js .reveal,
+    .no-js .reveal-up,
+    .no-js .reveal-fade{
+      opacity:1 !important;
+      transform:none !important;
+    }
+  </style>
+  <script>document.documentElement.classList.remove('no-js');</script>
+</head>
+<body>
+  <a class="a11y-sr" href="#main">Skip to content</a>
+
+  <!-- NAV -->
+  <nav class="nav" data-nav aria-expanded="false">
+    <div class="wrap nav__in">
+      <a class="nav__brand" href="./" aria-label="Breeze Café — Home" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+          <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+          <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span>Breeze Café</span>
+      </a>
+      <div class="nav__links" id="primary-menu">
+        <a href="./">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./services.html">Menu</a>
+        <a aria-current="page" href="./contact.html" class="btn btn-shimmer">WhatsApp / Contact</a>
+      </div>
+      <button class="nav__toggle" data-toggle aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="section hero--soft">
+    <div class="wrap">
+      <div class="stack gap-2">
+        <p class="pill">Say hello</p>
+        <h1 class="h1">Contact us</h1>
+        <p class="lead">Pop in a message or chat on WhatsApp. We’ll reply within a business day.</p>
+        <div class="cluster">
+          <a class="btn btn-shimmer" href="https://wa.me/27XXXXXXXXX" aria-label="Message Breeze Café on WhatsApp">WhatsApp →</a>
+          <a class="btn-outline" href="#form">Skip to form</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="stack">
+          <strong class="h3" style="font-size:1rem;">Quick details</strong>
+          <p style="margin:0">
+            <a href="mailto:hello@breezecafe.demo">hello@breezecafe.demo</a><br>
+            <a href="tel:+27000000000">+27 00 000 0000</a>
+          </p>
+          <p class="muted" style="margin:.2rem 0 0;">123 Breezeway Rd, Cape Town</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="section">
+    <div class="wrap contact-grid">
+      <!-- FORM -->
+      <form id="form" class="hero-card reveal-up" action="https://formspree.io/f/YOURENDPOINT" method="POST" novalidate>
+        <!-- Spam honeypot -->
+        <label class="honeypot">Leave this field empty
+          <input type="text" name="company" tabindex="-1" autocomplete="off">
+        </label>
+
+        <div>
+          <label class="label" for="name">Name</label>
+          <input class="input" id="name" name="name" required autocomplete="name" inputmode="text" placeholder="Your name">
+
+          <div class="form-row cols-2" style="margin-top:var(--row-gap)">
+            <div>
+              <label class="label" for="email">Email</label>
+              <input class="input" id="email" type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+            </div>
+            <div>
+              <label class="label" for="phone">Phone <span class="muted">(optional)</span></label>
+              <input class="input" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+27 82 123 4567">
+            </div>
+          </div>
+
+          <label class="label" for="msg" style="margin-top:var(--row-gap)">Message</label>
+          <textarea class="textarea" id="msg" name="message" rows="5" required placeholder="How can we help?"></textarea>
+
+          <!-- Hidden meta fields -->
+          <input type="hidden" name="plan" value="Starter">
+          <input type="hidden" name="page" id="metaPage" value="">
+          <input type="hidden" name="timestamp" id="metaTs" value="">
+          <input type="hidden" name="utm_source" id="utm_source" value="">
+          <input type="hidden" name="utm_medium" id="utm_medium" value="">
+          <input type="hidden" name="utm_campaign" id="utm_campaign" value="">
+          <input type="hidden" name="utm_term" id="utm_term" value="">
+          <input type="hidden" name="utm_content" id="utm_content" value="">
+
+          <p class="help">By sending this form you agree we may contact you back about your enquiry.</p>
+        </div>
+
+        <div class="form-footer">
+          <div class="status" id="formStatus" role="status" aria-live="polite"></div>
+          <div class="cluster">
+            <button class="btn btn-shimmer" type="submit" id="submitBtn">Send message</button>
+            <button class="btn-outline" type="button" id="whPrefill">Prefill WhatsApp</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- CONTACT / MAP -->
+      <aside class="contact-card reveal-fade">
+        <div>
+          <strong class="h3">Visit us</strong>
+          <p class="muted" style="margin:0">Mon–Fri 07:00–17:00 • Sat 08:00–14:00 • Sun closed</p>
+          <div class="map">
+            <!-- Replace with a static map image if you have one -->
+            <img src="./img/cafe.jpg" alt="Map placeholder for Breeze Café" loading="lazy" decoding="async">
+          </div>
+        </div>
+
+        <div class="contact-actions">
+          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=123%20Breezeway%20Rd%2C%20Cape%20Town" target="_blank" rel="noopener">Get directions</a>
+          <a class="btn-outline" href="tel:+27000000000">Call us</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- CTA bar -->
+  <div class="cta-bar">
+    <div class="wrap cluster" style="justify-content:space-between;">
+      <span class="muted">Need a quick answer? We’re fast on WhatsApp.</span>
+      <a href="https://wa.me/27XXXXXXXXX" class="btn btn-shimmer">Message on WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="wrap footer__in">
+      <div>
+        <a class="nav__brand" href="./" aria-label="Breeze Café" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+            <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+            <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <span>Breeze Café</span>
+        </a>
+        <p class="muted" style="margin-top:.5rem;">A sample Starter Plan website coded from scratch to show speed, clarity and UX.</p>
+      </div>
+      <nav aria-label="Footer">
+        <strong class="h3" style="font-size:1rem;">Links</strong>
+        <ul class="tick" style="margin-top:.5rem;">
+          <li><a href="./">Home</a></li>
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./services.html">Menu</a></li>
+          <li><a aria-current="page" href="./contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <strong class="h3" style="font-size:1rem;">Contact</strong>
+        <p style="margin-top:.5rem;">
+          <a href="https://wa.me/27XXXXXXXXX" rel="noopener">WhatsApp</a><br>
+          <a href="mailto:hello@breezecafe.demo">hello@breezecafe.demo</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="wrap" style="display:flex;justify-content:space-between;gap:.6rem;">
+        <span>© Breeze Café • Starter demo</span>
+        <span class="muted">Powered by NeuroWeb Digital</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Utils + interactions -->
+  <script src="../shared/js/utils.js" defer></script>
+  <script>
+    // Sticky nav + mobile toggle (closes on link click)
+    (function(){
+      const root = document.documentElement;
+      const nav  = document.querySelector('.nav');
+      const tog  = document.querySelector('[data-toggle]');
+      const cont = document.querySelector('[data-nav]');
+      const sc = () => nav?.setAttribute('data-scrolled', window.scrollY > 6);
+      sc();
+      window.addEventListener('scroll', sc, {passive:true});
+
+      if(tog && cont){
+        const linksContainer = document.getElementById('primary-menu');
+        tog.addEventListener('click', ()=>{
+          const ex   = tog.getAttribute('aria-expanded') === 'true';
+          const next = !ex;
+          tog.setAttribute('aria-expanded', String(next));
+          cont.setAttribute('aria-expanded', String(next));
+          root.classList.toggle('menu-open', next);
+
+          if (linksContainer){
+            linksContainer.querySelectorAll('a').forEach(a=>{
+              a.addEventListener('click', ()=>{
+                tog.setAttribute('aria-expanded','false');
+                cont.setAttribute('aria-expanded','false');
+                root.classList.remove('menu-open');
+              }, { once:true });
+            });
+          }
+        });
+      }
+    })();
+
+    // Autosize textarea (no libs)
+    (function(){
+      const ta = document.getElementById('msg');
+      if(!ta) return;
+      const fit = ()=>{
+        ta.style.height='auto';
+        ta.style.height = (ta.scrollHeight+2) + 'px';
+      };
+      ['input','change'].forEach(ev=>ta.addEventListener(ev, fit));
+      fit();
+    })();
+
+    // Populate hidden meta + UTM fields
+    (function(){
+      const qs = new URLSearchParams(location.search);
+      const set = (id, k) => {
+        const el = document.getElementById(id);
+        if(el) el.value = qs.get(k) || '';
+      };
+      const pageEl = document.getElementById('metaPage');
+      const tsEl   = document.getElementById('metaTs');
+      if (pageEl) pageEl.value = location.pathname;
+      if (tsEl)   tsEl.value   = new Date().toISOString();
+      set('utm_source','utm_source');
+      set('utm_medium','utm_medium');
+      set('utm_campaign','utm_campaign');
+      set('utm_term','utm_term');
+      set('utm_content','utm_content');
+    })();
+
+    // Prefill WhatsApp with form values
+    document.getElementById('whPrefill')?.addEventListener('click', ()=>{
+      const name  = (document.getElementById('name')?.value || '').trim();
+      const phone = (document.getElementById('phone')?.value || '').trim();
+      const msg   = (document.getElementById('msg')?.value || '').trim();
+      const lines = [
+        'Hello Breeze Café 👋',
+        name ? `Name: ${name}` : '',
+        phone? `Phone: ${phone}` : '',
+        msg  ? `Message: ${msg}` : ''
+      ].filter(Boolean).join('\n');
+      const url = `https://wa.me/27XXXXXXXXX?text=${encodeURIComponent(lines)}`;
+      window.open(url, '_blank');
+    });
+
+    // Progressive enhancement: AJAX submit to Formspree; fallback to normal POST if blocked
+    (function(){
+      const form = document.getElementById('form');
+      if(!form) return;
+      const status = document.getElementById('formStatus');
+      const btn    = document.getElementById('submitBtn');
+
+      function busy(b){
+        form.classList.toggle('is-busy', b);
+        if(btn){ btn.disabled = b; }
+      }
+
+      form.addEventListener('submit', async (e)=>{
+        // Basic inline validation
+        const name    = form.name?.value.trim();
+        const email   = form.email?.value.trim();
+        const message = form.message?.value.trim();
+        if(!name || !email || !message){
+          e.preventDefault();
+          if (status){
+            status.textContent = 'Please complete name, email and message.';
+            status.className   = 'status status--err';
+          }
+          return;
+        }
+
+        // If fetch not available, allow native submit
+        if(!window.fetch) return;
+
+        e.preventDefault();
+        busy(true);
+        if (status){
+          status.textContent = 'Sending…';
+          status.className   = 'status';
+        }
+
+        try{
+          const data = new FormData(form);
+          const res  = await fetch(form.action, {
+            method:'POST',
+            body:data,
+            headers:{ 'Accept':'application/json' }
+          });
+          if(res.ok){
+            form.reset();
+            if (status){
+              status.textContent = 'Thanks! We’ll get back to you shortly.';
+              status.className   = 'status status--ok';
+            }
+          }else{
+            busy(false);
+            form.submit(); // fallback to Formspree page
+          }
+        }catch(err){
+          busy(false);
+          form.submit(); // network blocked: fallback
+        }finally{
+          setTimeout(()=>busy(false),600);
+        }
+      });
+    })();
+
+    // Image fallback (swap to interior if any fail)
+    document.querySelectorAll('img').forEach(img=>{
+      img.addEventListener('error', ()=>{
+        if(!img.src.includes('shop-interior.jpg')){
+          img.src = './img/shop-interior.jpg';
+        }
+      }, { once:true });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Breeze Café — Starter Demo (NeuroWeb Digital)</title>
+  <meta name="description" content="A clean 5-page small business site built with the NeuroWeb Starter Plan. Mobile-first, fast, and ready to convert.">
+  <meta name="theme-color" content="#F5EFE7">
+  <meta name="color-scheme" content="light">
+
+  <!-- Canonical & Social -->
+  <link rel="canonical" href="https://demo.neurowebdigital.com/starter/">
+  <meta property="og:title" content="Breeze Café — Starter Demo (NeuroWeb Digital)">
+  <meta property="og:description" content="Light, fast, and clean small-business website — Starter Plan demo.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://demo.neurowebdigital.com/starter/">
+  <meta property="og:image" content="https://demo.neurowebdigital.com/starter/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Breeze Café — Starter Demo">
+  <meta name="twitter:description" content="Light, fast, and clean small-business site — Starter Plan demo.">
+  <meta name="twitter:image" content="https://demo.neurowebdigital.com/starter/img/og-cover.jpg">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/ui.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="./img/favicon.ico">
+  <!-- Preload the actual file you have -->
+  <link rel="preload" as="image" href="./img/coffee.jpg" imagesizes="(max-width: 768px) 92vw, 46vw">
+
+  <!-- Schema (Café / LocalBusiness) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CafeOrCoffeeShop",
+    "name":"Breeze Café",
+    "url":"https://demo.neurowebdigital.com/starter/",
+    "image":"https://demo.neurowebdigital.com/starter/img/og-cover.jpg",
+    "address":{"@type":"PostalAddress","addressCountry":"ZA"},
+    "telephone":"+27 00 000 0000",
+    "servesCuisine":"Coffee",
+    "priceRange":"R"
+  }
+  </script>
+
+  <style>
+    /* ========================
+       Page polish & micro FX
+       ======================== */
+
+    /* Hero: gradient halo under H1 + animated underline */
+    .hero-title{ position:relative; display:inline-block; }
+    .hero-title:before{
+      content:""; position:absolute; inset:auto 0 -16px 0; height:36px; z-index:-1;
+      background: radial-gradient(120% 60% at 0% 100%, color-mix(in hsl,var(--nw-accent) 22%, #fff) 0%, transparent 65%);
+      filter: blur(6px); opacity:.7;
+    }
+    .hero-title .u-underline{ position:relative; display:inline-block; padding-bottom:6px; }
+    .hero-title .u-underline::after{
+      content:""; position:absolute; left:0; bottom:0; height:6px; width:100%;
+      background:linear-gradient(90deg, color-mix(in hsl, var(--nw-accent) 85%, #fff), var(--nw-accent-2));
+      border-radius:6px; transform-origin:left center; transform:scaleX(.2);
+      transition:transform .6s var(--ease);
+    }
+    .hero.is-in .u-underline::after{ transform:scaleX(1); }
+
+    /* Decorative beans (floating, subtle) */
+    .beans{ position:absolute; inset:0; pointer-events:none; z-index:0; }
+    .bean{ position:absolute; opacity:.22; filter:blur(.2px); }
+    .bean svg{ width:18px; height:18px; }
+    @media (prefers-reduced-motion:no-preference){
+      @keyframes floaty{ 0%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-8px) rotate(6deg)} 100%{transform:translateY(0) rotate(0)} }
+      .bean{ animation:floaty 6s var(--ease) infinite; }
+      .bean--2{ animation-duration:7.5s; animation-delay:.4s; }
+      .bean--3{ animation-duration:9s; animation-delay:.8s; }
+      .bean--4{ animation-duration:7s; animation-delay:1.2s; }
+    }
+
+    /* Hero image blob + parallax nudge */
+    .blob{
+      position:absolute; inset:auto 0 0 auto; width:min(52vw,520px); height:min(52vw,520px);
+      filter:blur(24px); z-index:-1; transform:translate(6%,8%);
+      background:radial-gradient(50% 50% at 50% 50%, color-mix(in hsl, var(--nw-accent) 20%, #fff), var(--cream) 60%, transparent 65%);
+      border-radius:48% 52% 50% 50%; opacity:.55;
+    }
+    .hero-media{ padding:18px; border-radius:var(--radius-xl); transform:translateZ(0); }
+    .hero-media img{ display:block; width:100%; height:auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); }
+
+    /* Angled trust band */
+    .angled{ position:relative; background:var(--cream); border-block:1px solid var(--beige); overflow:hidden; }
+    .angled::before, .angled::after{
+      content:""; position:absolute; left:-10vw; right:-10vw; height:88px; z-index:0;
+      background:linear-gradient(90deg, color-mix(in hsl,var(--nw-accent) 10%, #fff), transparent 60%);
+      opacity:.35;
+    }
+    .angled::before{ top:-44px; transform:skewY(-2.2deg); }
+    .angled::after{ bottom:-44px; transform:skewY(2.2deg); }
+
+    /* Feature icons (inline SVG) */
+    .icon{ width:22px; height:22px; color:var(--nw-accent); margin-right:.5rem; vertical-align:-4px; }
+
+    /* Mini pricing strip */
+    .pricing{ display:grid; gap:var(--gap); grid-template-columns:1fr; background:var(--nw-surface); border:1px solid var(--beige); border-radius:var(--radius); padding:clamp(16px,3vw,24px); box-shadow:var(--shadow); }
+    @media(min-width:780px){ .pricing{ grid-template-columns:1.3fr 1fr; align-items:center; } }
+    .pill{
+      display:inline-flex; align-items:center; gap:.5rem; font-weight:800; color:#3B2A22;
+      background:color-mix(in hsl,var(--nw-accent) 18%, #fff);
+      border:1px solid color-mix(in hsl,var(--nw-accent) 28%, #fff);
+      border-radius:999px; padding:.45rem .75rem;
+    }
+
+    /* CTA shimmer */
+    @media (prefers-reduced-motion:no-preference){
+      .btn.btn-shimmer{
+        background-image:
+          linear-gradient(180deg, color-mix(in hsl,var(--nw-accent) 88%, white), var(--nw-accent)),
+          linear-gradient(120deg, rgba(255,255,255,.0) 30%, rgba(255,255,255,.45) 45%, rgba(255,255,255,0) 60%);
+        background-size: 100% 100%, 220% 100%;
+        background-position: 0 0, -120% 0;
+      }
+      .btn.btn-shimmer:hover{ background-position: 0 0, 120% 0; transition: background-position .9s var(--ease); }
+    }
+
+    /* Hero + beans placement */
+    .hero-wrap{ position:relative; z-index:1; }
+    .beans .bean--1{ top:6%; left:6%; }
+    .beans .bean--2{ top:18%; left:44%; }
+    .beans .bean--3{ top:72%; left:12%; }
+    .beans .bean--4{ top:84%; left:60%; }
+
+    /* ==============================
+       Sticky glass nav — UPGRADE
+       ============================== */
+    .nav{ position:sticky; top:0; backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px); }
+    .nav .nav__in{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; }
+    .nav[data-scrolled="true"] .nav__in{ box-shadow:0 6px 18px rgba(0,0,0,.06); }
+
+    .nav .nav__links{ display:flex; align-items:center; gap:.8rem; }
+
+    /* Highlight current page in nav */
+    .nav .nav__links a[aria-current="page"]{
+      font-weight:700;
+      color:var(--nw-accent);
+    }
+
+    /* Compact, aligned button in nav */
+    .nav .nav__links .btn{
+      --h: 38px;
+      display:inline-flex; align-items:center; justify-content:center;
+      height:var(--h); line-height:var(--h);
+      padding:0 .9rem; border-radius:12px; font-weight:700;
+      box-shadow:none; white-space:nowrap;
+    }
+    /* Make outline links in nav match height if used */
+    .nav .nav__links .btn-outline{ height:var(--h); line-height:var(--h); padding:0 .9rem; border-radius:12px; }
+
+    /* Mobile menu state */
+    .nav__toggle{ border-radius:12px; }
+    @media (max-width: 900px){
+      .nav .nav__links{ display:none; }
+      .nav[aria-expanded="true"] .nav__links{
+        display:flex; flex-direction:column; align-items:stretch;
+        gap:.6rem; padding:.8rem 0;
+      }
+      .nav .nav__links a{ padding:.6rem .2rem; }
+      .nav .nav__links .btn{ width:100%; }
+    }
+
+    /* Specials teaser */
+    .specials{background:var(--cream);padding:clamp(24px,5vw,48px) 0;text-align:center;}
+    .specials h2{font-size:clamp(1.4rem,4vw,2rem);margin-bottom:0.5rem;color:var(--nw-accent);}
+    .specials .menu{display:flex;flex-wrap:wrap;justify-content:center;gap:1.2rem;margin-top:1rem;}
+    .specials .item{background:#fff;border:1px solid var(--beige);border-radius:var(--radius);padding:1rem 1.2rem;box-shadow:var(--shadow-sm);transition:transform .3s var(--ease), box-shadow .3s var(--ease);max-width:320px;text-align:left}
+    .specials .item:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+    .specials .price{color:var(--espresso);font-weight:700;display:block;margin-top:0.3rem;}
+
+    /* No-JS reveal fallback */
+    .no-js .reveal, .no-js .reveal-up, .no-js .reveal-fade{ opacity:1 !important; transform:none !important; }
+  </style>
+  <script>document.documentElement.classList.remove('no-js');</script>
+</head>
+<body>
+  <a class="a11y-sr" href="#main">Skip to content</a>
+
+  <!-- NAV -->
+  <nav class="nav" data-nav aria-expanded="false">
+    <div class="wrap nav__in">
+      <a class="nav__brand" href="./" aria-label="Breeze Café — Home" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+        <!-- Tiny SVG bean logo -->
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+          <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+          <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span>Breeze Café</span>
+      </a>
+      <div class="nav__links" id="primary-menu">
+        <a href="./" aria-current="page">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./services.html">Menu</a>
+        <a href="./contact.html" class="btn btn-shimmer">WhatsApp / Contact</a>
+      </div>
+      <button class="nav__toggle" data-toggle aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="section hero hero-wrap">
+    <!-- floating beans -->
+    <div class="beans" aria-hidden="true">
+      <div class="bean bean--1">
+        <svg viewBox="0 0 64 64"><path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/></svg>
+      </div>
+      <div class="bean bean--2">
+        <svg viewBox="0 0 64 64"><path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#E6A85C"/></svg>
+      </div>
+      <div class="bean bean--3">
+        <svg viewBox="0 0 64 64"><path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/></svg>
+      </div>
+      <div class="bean bean--4">
+        <svg viewBox="0 0 64 64"><path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#E6A85C"/></svg>
+      </div>
+    </div>
+
+    <div class="wrap grid grid-2 hero">
+      <div class="stack gap-2 reveal-up hero-title">
+        <p class="pill">NeuroWeb Starter • Demo site</p>
+        <h1 class="h1"><span class="u-underline">Fresh coffee. Light, fast website.</span></h1>
+        <p class="lead">
+          A realistic 5-page small-business site — built to show how your Starter Plan can make any local brand
+          feel premium, fast and easy to contact.
+        </p>
+        <div class="cluster">
+          <a class="btn btn-shimmer" href="https://wa.me/27XXXXXXXXX" aria-label="Message Breeze Café on WhatsApp" rel="noopener">Message on WhatsApp</a>
+          <a class="btn-outline" href="./contact.html">Ask about this Starter demo →</a>
+        </div>
+      </div>
+
+      <div style="position:relative">
+        <span class="blob" aria-hidden="true"></span>
+        <div class="card card--hover hero-media reveal-fade" data-parallax>
+          <!-- Use only the file that exists; no broken AVIF/WebP sources -->
+          <img
+            class="img-lift"
+            src="./img/coffee.jpg"
+            alt="Latte art served at Breeze Café"
+            width="960" height="720"
+            loading="eager" fetchpriority="high" decoding="async"
+            sizes="(max-width: 768px) 92vw, 46vw">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES -->
+  <section class="section surface" id="main">
+    <div class="wrap center stack" style="margin-bottom:1.8rem;">
+      <p class="pill">What you get in the Starter Plan</p>
+      <h2 class="h2" style="margin:0;">Simple structure, everything you actually need</h2>
+      <p class="lead" style="max-width:640px;margin-inline:auto;">
+        Breeze Café is just a demo — colours, fonts and content are all fully customisable for your business.
+        The layout stays simple, fast and conversion-focused.
+      </p>
+    </div>
+
+    <div class="wrap grid grid-3">
+      <div class="card card--hover reveal" style="padding:18px;">
+        <h3 class="h3">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 7h16v2H4V7Zm0 4h10v2H4v-2Zm0 4h16v2H4v-2Z"/>
+          </svg>
+          Simple pages
+        </h3>
+        <ul class="tick">
+          <li>Home (your key offer)</li>
+          <li>About / Story</li>
+          <li>Menu / Services</li>
+          <li>Contact / WhatsApp CTA</li>
+        </ul>
+      </div>
+      <div class="card card--hover reveal" style="padding:18px; transition-delay:.06s;">
+        <h3 class="h3">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="m12 2 4 7h-8l4-7Zm0 20-4-7h8l-4 7Zm10-10-7 4V8l7 4ZM2 12l7-4v8l-7-4Z"/>
+          </svg>
+          Essentials built-in
+        </h3>
+        <ul class="tick">
+          <li>Mobile-responsive design</li>
+          <li>WhatsApp CTA + contact form</li>
+          <li>Basic SEO (titles, meta, OG)</li>
+        </ul>
+      </div>
+      <div class="card card--hover reveal" style="padding:18px; transition-delay:.12s;">
+        <h3 class="h3">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M3 5h18v2H3V5Zm2 4h14v2H5V9Zm-2 4h18v2H3v-2Zm2 4h14v2H5v-2Z"/>
+          </svg>
+          Performance focused
+        </h3>
+        <ul class="tick">
+          <li>Lightweight, no heavy page builders</li>
+          <li>Optimised images and clean code</li>
+          <li>Fast load times on mobile</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODAY'S SPECIALS (teaser) -->
+  <section class="specials reveal-up" aria-label="Today's specials">
+    <div class="wrap">
+      <h2>☕ Today’s Specials</h2>
+      <p class="lead">Real café items here — imagine your own services, treatments or packages instead.</p>
+      <div class="menu">
+        <div class="item">
+          <strong>Flat White</strong>
+          <span class="price">R38</span>
+          <p class="muted">Smooth and creamy double espresso with velvety milk.</p>
+        </div>
+        <div class="item">
+          <strong>Caramel Latte</strong>
+          <span class="price">R42</span>
+          <p class="muted">Rich caramel swirl blended with espresso and steamed milk.</p>
+        </div>
+        <div class="item">
+          <strong>Chocolate Croissant</strong>
+          <span class="price">R28</span>
+          <p class="muted">Flaky butter pastry filled with melted Belgian chocolate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAND (angled) -->
+  <section class="section angled">
+    <div class="wrap">
+      <div class="center reveal-up stack">
+        <h2 class="h2">What clients say</h2>
+        <p class="lead">“Super quick site and clean design — exactly what we needed.”</p>
+      </div>
+      <div class="grid grid-3" style="margin-top:20px">
+        <div class="card reveal" style="padding:18px;">
+          <p>“Launch to first lead in a week. The WhatsApp button converts like crazy.”</p>
+          <p class="muted">— Local Café (Starter site)</p>
+        </div>
+        <div class="card reveal" style="padding:18px; transition-delay:.06s;">
+          <p>“It looks premium but stayed within our budget — great value.”</p>
+          <p class="muted">— Fitness Coach</p>
+        </div>
+        <div class="card reveal" style="padding:18px; transition-delay:.12s;">
+          <p>“Setup, SEO and forms were all handled. Hassle-free.”</p>
+          <p class="muted">— Small Agency</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MINI PRICING (value punch) -->
+  <section class="section">
+    <div class="wrap pricing reveal">
+      <div class="stack gap-2">
+        <span class="pill">Starter • R5,000–7,500</span>
+        <h2 class="h2" style="margin:0;">Launch-ready in ±1 week</h2>
+        <p class="lead" style="margin:0;">5 pages • WhatsApp / contact form • Basic SEO • Lightweight code</p>
+        <p class="muted" style="margin:0;max-width:420px;">
+          Perfect for cafés, salons, coaches, consultants and other local businesses that need a
+          professional home online without overcomplicating things.
+        </p>
+      </div>
+      <div class="cluster" style="justify-content:flex-start;">
+        <a href="https://wa.me/27XXXXXXXXX" class="btn btn-shimmer" rel="noopener">Get started with a Starter site</a>
+        <a href="./contact.html" class="btn-outline">See full Starter details →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="wrap footer__in">
+      <div>
+        <a class="nav__brand" href="./" aria-label="Breeze Café" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+            <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+            <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <span>Breeze Café</span>
+        </a>
+        <p class="muted" style="margin-top:.5rem;">A sample Starter Plan website coded from scratch to show speed, clarity and UX.</p>
+      </div>
+      <nav aria-label="Footer">
+        <strong class="h3" style="font-size:1rem;">Links</strong>
+        <ul class="tick" style="margin-top:.5rem;">
+          <li><a href="./" aria-current="page">Home</a></li>
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./services.html">Menu</a></li>
+          <li><a href="./contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <strong class="h3" style="font-size:1rem;">Contact</strong>
+        <p style="margin-top:.5rem;">
+          <a href="https://wa.me/27XXXXXXXXX" rel="noopener">WhatsApp</a><br>
+          <a href="mailto:hello@breezecafe.demo">hello@breezecafe.demo</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="wrap" style="display:flex;justify-content:space-between;gap:.6rem;">
+        <span>© Breeze Café • Starter demo</span>
+        <span class="muted">Powered by NeuroWeb Digital</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../shared/js/utils.js" defer></script>
+  <script>
+    // JS upgrades: parallax, nav scroll state, mobile menu a11y, hero fallback
+    (function(){
+      const root = document.documentElement;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Tiny parallax nudge on hero media
+      const el = document.querySelector('[data-parallax]');
+      if(el && !reduce){
+        const onMove = (e)=>{
+          const r = el.getBoundingClientRect();
+          const cx = r.left + r.width/2; const cy = r.top + r.height/2;
+          const dx = (e.clientX - cx)/r.width; const dy = (e.clientY - cy)/r.height;
+          el.style.transform = `translate3d(${dx*6}px, ${dy*6}px, 0)`;
+        };
+        const reset = ()=>{ el.style.transform='translate3d(0,0,0)'; };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseleave', reset);
+      }
+
+      // Sticky nav shadow when scrolled
+      const nav = document.querySelector('.nav');
+      const onScroll = ()=>{ nav?.setAttribute('data-scrolled', window.scrollY > 6); };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
+
+      // Mobile menu toggle with ARIA state
+      const toggle = document.querySelector('[data-toggle]');
+      const container = document.querySelector('[data-nav]');
+      if(toggle && container){
+        toggle.addEventListener('click', ()=>{
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          container.setAttribute('aria-expanded', String(!expanded));
+          root.classList.toggle('menu-open', !expanded);
+        });
+      }
+
+      // HERO IMAGE FALLBACK (if coffee.jpg fails, swap to shop-interior.jpg)
+      const heroImg = document.querySelector('.hero-media img');
+      if(heroImg){
+        heroImg.onerror = function(){
+          if(this.src.includes('shop-interior.jpg')) return; // avoid loop
+          this.src = './img/shop-interior.jpg';
+        };
+      }
+    })();
+  </script>
+</body>
+</html>

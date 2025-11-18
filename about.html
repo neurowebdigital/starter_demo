@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>About — Breeze Café</title>
+  <meta name="description" content="Our story, values, and opening hours at Breeze Café. Locally roasted coffee, friendly service, simple food.">
+  <meta name="theme-color" content="#F5EFE7">
+  <meta name="color-scheme" content="light">
+
+  <!-- Base styles from your kit -->
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/ui.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= Fallback tokens (safe defaults) ================= */
+    :root{
+      --beige:#E9E5DC;
+      --cream:#F5EFE7;
+      --espresso:#2E221B;
+      --nw-accent:#C88A3A;
+      --nw-surface:#F8F6F2;
+      --radius:12px;
+      --radius-xl:18px;
+      --shadow-sm:0 6px 16px rgba(0,0,0,.06);
+      --shadow:0 12px 28px rgba(0,0,0,.10);
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+
+    /* ===== Hero ===== */
+    .hero--soft{
+      margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); width:100vw;
+      background:linear-gradient(180deg,#fff,color-mix(in hsl,var(--nw-accent, #C88A3A) 6%,#fff));
+      border-bottom:1px solid var(--beige);
+      overflow:hidden;
+    }
+    .hero--soft .wrap{ display:grid; gap:clamp(18px,4vw,28px); grid-template-columns:1.2fr .9fr; align-items:center; }
+    .hero-img{ border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow); aspect-ratio:4/3; background:#f4efe9; }
+    .hero-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+    @media (max-width:900px){ .hero--soft .wrap{ grid-template-columns:1fr; } }
+
+    /* ===== Sticky glass nav ===== */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px);
+      background:color-mix(in hsl,#ffffff 82%,transparent);
+      border-bottom:1px solid color-mix(in hsl,var(--beige) 55%,transparent);
+    }
+    .nav .nav__in{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; min-height:58px; }
+    .nav[data-scrolled="true"] .nav__in{ box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    .nav .nav__links{ display:flex; align-items:center; gap:.8rem; }
+
+    /* Highlight current page in nav */
+    .nav .nav__links a[aria-current="page"]{
+      font-weight:700;
+      color:var(--nw-accent);
+    }
+
+    .nav .nav__links .btn{
+      --h:38px; display:inline-flex; align-items:center; justify-content:center; height:var(--h);
+      line-height:var(--h); padding:0 .9rem; border-radius:12px; font-weight:700; white-space:nowrap;
+    }
+    .nav__toggle{ border-radius:12px; border:1px solid var(--beige); background:#fff; padding:.35rem .6rem; }
+    .nav__toggle:focus-visible,
+    .nav .nav__links a:focus-visible{ outline:2px solid color-mix(in hsl,var(--nw-accent) 60%,#fff); outline-offset:2px; }
+    @media (max-width:900px){
+      .nav .nav__links{ display:none; }
+      .nav[aria-expanded="true"] .nav__links{
+        display:flex; flex-direction:column; align-items:stretch; gap:.6rem; padding:.8rem 0;
+      }
+      .nav .nav__links .btn{ width:100%; }
+    }
+
+    /* ===== Values ===== */
+    .values{ display:grid; gap:clamp(10px,2vw,14px); grid-template-columns:repeat(3,minmax(0,1fr)); }
+    @media (max-width:900px){ .values{ grid-template-columns:1fr; } }
+    .val{ background:#fff; border:1px solid var(--beige); border-radius:16px; padding:16px 18px; box-shadow:var(--shadow-sm); }
+    .val h3{ display:flex; align-items:center; gap:.6rem; margin:0 0 .35rem; line-height:1.2; }
+    .icon{ width:20px; height:20px; color:var(--nw-accent); flex:0 0 20px; display:inline-block; translate:0 .5px; }
+
+    /* ===== Hours ===== */
+    .hours{ background:var(--cream); border:1px solid var(--beige); border-radius:var(--radius); padding:16px; }
+    .hours table{ width:100%; border-collapse:collapse; font-size:.98rem; }
+    .hours td{ padding:8px 0; border-bottom:1px solid #eee; }
+    .hours tr:last-child td{ border-bottom:0; }
+    .status{ display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .6rem; border-radius:999px; font-weight:800; line-height:1; white-space:nowrap; }
+    .status--open{ background:#e8fff2; color:#0a8f44; border:1px solid #bfe8cf; }
+    .status--closed{ background:#fff4f4; color:#a61b1b; border:1px solid #f1c9c9; }
+
+    /* ===== Story (timeline removed) ===== */
+    .story-list{ display:flex; flex-direction:column; gap:14px; }
+    .s-item{
+      padding:8px 0 14px;
+      border-bottom:1px solid color-mix(in hsl, var(--beige) 65%, transparent);
+    }
+    .s-item:last-child{ border-bottom:0; }
+    .s-item .h3{ margin:0; }
+    .s-item .muted{ margin:.25rem 0 0; }
+
+    /* ===== Team ===== */
+    .team{ display:grid; gap:14px; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    @media (max-width:780px){ .team{ grid-template-columns:1fr 1fr; } }
+    @media (max-width:520px){ .team{ grid-template-columns:1fr; } }
+    .person{ display:flex; gap:.8rem; align-items:center; border:1px solid var(--beige); border-radius:16px; padding:10px 12px; background:#fff; box-shadow:var(--shadow-sm); }
+    .avatar{ width:54px; height:54px; border-radius:50%; background:#f2eee9; overflow:hidden; flex:0 0 54px; }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* ===== Gallery ===== */
+    .gallery{ display:grid; gap:12px; grid-template-columns:2fr 1fr; }
+    .gallery .g2{ display:grid; gap:12px; grid-template-rows:1fr 1fr; }
+    .gallery img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:16px; }
+    @media (max-width:900px){ .gallery{ grid-template-columns:1fr; } .gallery .g2{ grid-template-rows:none; grid-template-columns:1fr 1fr; } }
+
+    /* ===== Reviews slider ===== */
+    .reviews{ background:var(--nw-surface); border:1px solid var(--beige); border-radius:var(--radius-xl); box-shadow:var(--shadow); padding:clamp(14px,2.6vw,18px); }
+    .rv-viewport{ overflow:hidden; position:relative; }
+    .rv-track{ display:flex; gap:12px; scroll-behavior:smooth; overflow:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; padding-bottom:2px; }
+    .rv-card{ flex:0 0 80%; max-width:680px; scroll-snap-align:center; background:#fff; border:1px solid var(--beige); border-radius:16px; padding:16px 18px; box-shadow:var(--shadow-sm); }
+    @media (min-width:900px){ .rv-card{ flex:0 0 48%; } }
+    .rv-stars{ color:#f0a500; font-size:18px; letter-spacing:2px; }
+    .rv-meta{ color:#6a6a6a; font-size:.9rem; margin-top:.4rem; }
+    .rv-controls{ display:flex; gap:.6rem; justify-content:flex-end; margin-top:.6rem; }
+    .rv-btn{ display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; border:1px solid var(--beige); background:#fff; cursor:pointer; font-weight:800; }
+    .rv-btn:focus-visible{ outline:2px solid color-mix(in hsl,var(--nw-accent) 60%,#fff); outline-offset:2px; }
+
+    /* ===== Map card ===== */
+    .map-card{ background:#fff; border:1px solid var(--beige); border-radius:var(--radius-xl); box-shadow:var(--shadow); display:grid; grid-template-columns:1.4fr 1fr; gap:14px; padding:14px; }
+    .map{ border:1px solid var(--beige); border-radius:12px; overflow:hidden; aspect-ratio:16/9; background:#f2eee9; display:flex; align-items:center; justify-content:center; }
+    .map img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .map-details{ display:flex; flex-direction:column; gap:.6rem; justify-content:center; }
+    @media (max-width:900px){ .map-card{ grid-template-columns:1fr; } }
+
+    /* ===== CTA bar ===== */
+    .cta-bar{
+      position:sticky; bottom:0; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); width:100vw;
+      background:color-mix(in hsl,#ffffff 92%,transparent);
+      border-top:1px solid var(--beige); padding:.8rem 0; z-index:40;
+      backdrop-filter:saturate(120%) blur(6px); -webkit-backdrop-filter:saturate(120%) blur(6px);
+    }
+
+    /* No-JS reveal fallback */
+    .no-js .reveal, .no-js .reveal-up, .no-js .reveal-fade{ opacity:1 !important; transform:none !important; }
+
+    @media (prefers-reduced-motion:reduce){
+      .rv-track{ scroll-behavior:auto; }
+    }
+  </style>
+
+  <script>document.documentElement.classList.remove('no-js');</script>
+</head>
+<body>
+  <a class="a11y-sr" href="#main">Skip to content</a>
+
+  <!-- NAV -->
+  <nav class="nav" data-nav aria-expanded="false">
+    <div class="wrap nav__in">
+      <a class="nav__brand" href="./" aria-label="Breeze Café — Home" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+          <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+          <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span>Breeze Café</span>
+      </a>
+      <div class="nav__links" id="primary-menu">
+        <a href="./">Home</a>
+        <a aria-current="page" href="./about.html">About</a>
+        <a href="./services.html">Menu</a>
+        <a href="./contact.html" class="btn btn-shimmer">WhatsApp / Contact</a>
+      </div>
+      <button class="nav__toggle" data-toggle aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="section hero--soft">
+    <div class="wrap">
+      <div class="stack gap-2">
+        <p class="pill">NeuroWeb Starter • About page</p>
+        <h1 class="h1">About Breeze Café</h1>
+        <p class="lead">
+          A warm, simple About page that tells your story, shows your values and makes it clear when you’re open.
+          Swap this café copy for your own business story.
+        </p>
+        <div class="values">
+          <div class="val reveal">
+            <h3><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4 7H8l4-7zM3 21h18v-2H3v2z"/></svg>Quality first</h3>
+            <p class="muted">We use specialty beans and bake fresh daily. No fuss, just great taste.</p>
+          </div>
+          <div class="val reveal" style="transition-delay:.06s">
+            <h3><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A6.5 6.5 0 0 1 15 6.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Community</h3>
+            <p class="muted">Neighbourhood spot — friendly service, familiar faces, open six days.</p>
+          </div>
+          <div class="val reveal" style="transition-delay:.12s">
+            <h3><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 12h18v2H3zM3 6h18v2H3zM3 18h18v2H3z"/></svg>Simple & fast</h3>
+            <p class="muted">Clear pricing, WhatsApp orders, quick pick-up. Easy.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-img">
+        <img src="./img/outside.jpg" alt="Warm interior of Breeze Café" loading="lazy" decoding="async" width="1200" height="900">
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="section">
+    <div class="wrap grid grid-2">
+      <!-- Story (timeline removed) -->
+      <section class="stack gap-2 reveal-up" aria-labelledby="storyTitle">
+        <h2 class="h2" id="storyTitle">How we started</h2>
+        <p class="muted" style="margin:0;">
+          This is example copy for the About page. For your Starter site we replace it with your own “how we began”
+          story, milestones and what makes you different.
+        </p>
+
+        <div class="story-list">
+          <article class="s-item">
+            <h3 class="h3">A tiny cart → a cosy corner (2019)</h3>
+            <p class="muted">We began with a two-group machine and a dream. Regulars pushed us to open a permanent spot.</p>
+          </article>
+
+          <article class="s-item">
+            <h3 class="h3">Roasters & recipes (2021)</h3>
+            <p class="muted">Partnered with a local roaster, dialled-in our blends, and added simple food that travels well.</p>
+          </article>
+
+          <article class="s-item">
+            <h3 class="h3">Today</h3>
+            <p class="muted">Still independent, still friendly — and now you can WhatsApp your order for pickup.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Hours & Status -->
+      <aside class="stack gap-2 reveal" aria-labelledby="hoursTitle">
+        <h2 class="h2" id="hoursTitle">Opening hours</h2>
+        <div class="hours">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+            <span class="muted">Africa/Johannesburg</span>
+            <span id="openStatus" class="status status--open" aria-live="polite">Open now</span>
+          </div>
+          <table aria-describedby="hoursTitle">
+            <tbody>
+              <tr><td>Mon–Fri</td><td style="text-align:right;">07:00 – 17:00</td></tr>
+              <tr><td>Sat</td><td style="text-align:right;">08:00 – 14:00</td></tr>
+              <tr><td>Sun</td><td style="text-align:right;">Closed</td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin:.6rem 0 0;">Public holidays may differ — WhatsApp us before you pop in.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Team -->
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h2">Meet the team</h2>
+      <p class="muted" style="margin:0 0 .6rem;">Use this section to show faces behind the business — owners, staff or practitioners.</p>
+      <div class="team" style="margin-top:12px;">
+        <article class="person reveal">
+          <div class="avatar"><img src="./img/barista.jpg" alt="Barista at the espresso machine" loading="lazy" decoding="async" width="1080" height="720"></div>
+          <div><strong>Sam — Head Barista</strong><p class="muted" style="margin:.2rem 0 0;">Milk-texturing wizard; ask for a flat white.</p></div>
+        </article>
+        <article class="person reveal" style="transition-delay:.06s">
+          <div class="avatar"><img src="./img/baker.jpg" alt="Freshly made cappuccino" loading="lazy" decoding="async" width="960" height="720"></div>
+          <div><strong>Lebo — Baker</strong><p class="muted" style="margin:.2rem 0 0;">Croissants out by 7:30 — warm and flaky.</p></div>
+        </article>
+        <article class="person reveal" style="transition-delay:.12s">
+          <div class="avatar"><img src="./img/manager.jpg" alt="Manager on the café floor" loading="lazy" decoding="async" width="1200" height="900"></div>
+          <div><strong>Taylor — Manager</strong><p class="muted" style="margin:.2rem 0 0;">Keeps service smooth and friendly.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h2">A look inside</h2>
+      <p class="muted" style="margin:0 0 .6rem;">Photos here become your office, clinic, studio or shop — whatever suits your business.</p>
+      <div class="gallery" style="margin-top:12px;">
+        <div><img src="./img/store=front.jpg" alt="Café seating and plants" loading="lazy" decoding="async" width="1200" height="800"></div>
+        <div class="g2">
+          <img src="./img/interior.jpg" alt="Espresso and latte art" loading="lazy" decoding="async" width="1200" height="900">
+          <img src="./img/outside.jpg" alt="Bar counter and grinder" loading="lazy" decoding="async" width="1200" height="900">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews Slider -->
+  <section class="section">
+    <div class="wrap reviews">
+      <div class="stack gap-1">
+        <h2 class="h2" id="reviewsHeading">What people say</h2>
+        <p class="muted" style="margin:0">Short, punchy testimonials like this build trust fast.</p>
+      </div>
+
+      <div class="rv-viewport" aria-labelledby="reviewsHeading">
+        <div class="rv-track" id="rvTrack" tabindex="0" role="region" aria-label="Customer reviews (scrollable)">
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p style="margin:.35rem 0 0;">“Flat white is perfect every time, and the WhatsApp order saves me in the morning.”</p>
+            <div class="rv-meta">— Kamo, Gardens</div>
+          </article>
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p style="margin:.35rem 0 0;">“Friendly team, great croissants, quick service. My go-to spot.”</p>
+            <div class="rv-meta">— Danika, City Bowl</div>
+          </article>
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="4 out of 5 stars">★★★★☆</div>
+            <p style="margin:.35rem 0 0;">“Love the halloumi & avo toast. Could do with more outdoor seating.”</p>
+            <div class="rv-meta">— Yusuf, Tamboerskloof</div>
+          </article>
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p style="margin:.35rem 0 0;">“Best caramel latte. Staff are super kind.”</p>
+            <div class="rv-meta">— Mia, Oranjezicht</div>
+          </article>
+        </div>
+      </div>
+
+      <div class="rv-controls">
+        <button class="rv-btn" id="rvPrev" aria-label="Previous review">‹</button>
+        <button class="rv-btn" id="rvNext" aria-label="Next review">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Card -->
+  <section class="section">
+    <div class="wrap map-card">
+      <div class="map">
+        <img src="./img/outside.jpg" alt="Map placeholder for Breeze Café" loading="lazy" decoding="async" width="1200" height="900">
+      </div>
+      <div class="map-details">
+        <h2 class="h2" style="margin:0;">Find us</h2>
+        <p class="muted" style="margin:0;">123 Breezeway Rd, Cape Town</p>
+        <p class="muted" style="margin:0;">Mon–Fri 07:00–17:00 • Sat 08:00–14:00</p>
+        <div class="cluster" style="margin-top:.6rem;">
+          <a class="btn btn-shimmer" href="https://www.google.com/maps/search/?api=1&query=123%20Breezeway%20Rd%2C%20Cape%20Town" target="_blank" rel="noopener">Get directions</a>
+          <a class="btn-outline" href="https://wa.me/27XXXXXXXXX">WhatsApp us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA bar -->
+  <div class="cta-bar">
+    <div class="wrap cluster" style="justify-content:space-between;">
+      <span class="muted">Questions about this Starter site or bulk orders? We’re quick to reply.</span>
+      <a href="https://wa.me/27XXXXXXXXX" class="btn btn-shimmer">WhatsApp Breeze Café</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="wrap footer__in">
+      <div>
+        <a class="nav__brand" href="./" aria-label="Breeze Café" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+            <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+            <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <span>Breeze Café</span>
+        </a>
+        <p class="muted" style="margin-top:.5rem;">A sample Starter Plan website coded from scratch to show speed, clarity and UX.</p>
+      </div>
+      <nav aria-label="Footer">
+        <strong class="h3" style="font-size:1rem;">Links</strong>
+        <ul class="tick" style="margin-top:.5rem;">
+          <li><a href="./">Home</a></li>
+          <li><a aria-current="page" href="./about.html">About</a></li>
+          <li><a href="./services.html">Menu</a></li>
+          <li><a href="./contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <strong class="h3" style="font-size:1rem;">Contact</strong>
+        <p style="margin-top:.5rem;">
+          <a href="https://wa.me/27XXXXXXXXX" rel="noopener">WhatsApp</a><br>
+          <a href="mailto:hello@breezecafe.demo">hello@breezecafe.demo</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="wrap" style="display:flex;justify-content:space-between;gap:.6rem;">
+        <span>© Breeze Café • Starter demo</span>
+        <span class="muted">Powered by NeuroWeb Digital</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Utils + tiny interactions -->
+  <script src="../shared/js/utils.js" defer></script>
+  <script>
+    (function(){
+      const root=document.documentElement;
+      const nav=document.querySelector('.nav');
+      const tog=document.querySelector('[data-toggle]');
+      const cont=document.querySelector('[data-nav]');
+      const sc=()=>nav?.setAttribute('data-scrolled', window.scrollY>6);
+      sc(); window.addEventListener('scroll', sc, {passive:true});
+
+      if(tog && cont){
+        const links=document.getElementById('primary-menu');
+        tog.addEventListener('click', ()=>{
+          const ex=tog.getAttribute('aria-expanded')==='true';
+          tog.setAttribute('aria-expanded', String(!ex));
+          cont.setAttribute('aria-expanded', String(!ex));
+          root.classList.toggle('menu-open', !ex);
+          if(links){
+            links.querySelectorAll('a').forEach(a=>{
+              a.addEventListener('click', ()=>{
+                tog.setAttribute('aria-expanded','false');
+                cont.setAttribute('aria-expanded','false');
+                root.classList.remove('menu-open');
+              }, {once:true});
+            });
+          }
+        });
+      }
+
+      // Open/Closed status (Africa/Johannesburg)
+      const TZ='Africa/Johannesburg';
+      function getParts(){
+        const now=new Date();
+        const parts=new Intl.DateTimeFormat('en-GB',{
+          timeZone:TZ, weekday:'short', hour:'2-digit', minute:'2-digit', hour12:false
+        }).formatToParts(now);
+        const wk=parts.find(p=>p.type==='weekday').value;
+        const hh=parseInt(parts.find(p=>p.type==='hour').value,10);
+        const mm=parseInt(parts.find(p=>p.type==='minute').value,10);
+        return {wk, mins:hh*60+mm};
+      }
+      function isOpen(){
+        const {wk, mins}=getParts();
+        const MON_FRI_OPEN=7*60, MON_FRI_CLOSE=17*60;
+        const SAT_OPEN=8*60, SAT_CLOSE=14*60;
+        if(['Mon','Tue','Wed','Thu','Fri'].includes(wk)) return mins>=MON_FRI_OPEN && mins<MON_FRI_CLOSE;
+        if(wk==='Sat') return mins>=SAT_OPEN && mins<SAT_CLOSE;
+        return false;
+      }
+      const statusEl=document.getElementById('openStatus');
+      if(statusEl){
+        const open=isOpen();
+        statusEl.textContent=open ? 'Open now' : 'Closed';
+        statusEl.className='status ' + (open ? 'status--open' : 'status--closed');
+      }
+
+      // Image fallbacks
+      document.querySelectorAll('img').forEach(img=>{
+        img.addEventListener('error', ()=>{
+          if(!img.src.includes('shop-interior.jpg')) img.src='./img/shop-interior.jpg';
+        }, { once:true });
+      });
+
+      // Reviews slider controls
+      const track=document.getElementById('rvTrack');
+      const prev=document.getElementById('rvPrev');
+      const next=document.getElementById('rvNext');
+      function step(dir){
+        if(!track) return;
+        const card=track.querySelector('.rv-card');
+        const w=card ? card.getBoundingClientRect().width : 320;
+        track.scrollBy({ left:dir*(w+12), behavior:'smooth' });
+      }
+      prev?.addEventListener('click', ()=>step(-1));
+      next?.addEventListener('click', ()=>step(1));
+      track?.addEventListener('keydown', (e)=>{
+        if(e.key==='ArrowLeft'){ e.preventDefault(); step(-1); }
+        if(e.key==='ArrowRight'){ e.preventDefault(); step(1); }
+      });
+    })();
+  </script>
+</body>
+</html>

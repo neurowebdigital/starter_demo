@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Menu — Breeze Café</title>
+  <meta name="description" content="Breeze Café menu — coffee, pastries and light food. Built as a demo menu page for the NeuroWeb Starter Plan.">
+  <meta name="theme-color" content="#F5EFE7">
+  <meta name="color-scheme" content="light">
+
+  <!-- Base styles from your kit -->
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/ui.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --beige:#E9E5DC;
+      --cream:#F5EFE7;
+      --espresso:#2E221B;
+      --nw-accent:#C88A3A;
+      --nw-accent-2:#E6A85C;
+      --nw-surface:#F8F6F2;
+      --radius:12px;
+      --radius-xl:18px;
+      --shadow-sm:0 6px 16px rgba(0,0,0,.06);
+      --shadow:0 12px 28px rgba(0,0,0,.10);
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+
+    /* Sticky glass nav */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(140%) blur(8px); -webkit-backdrop-filter:saturate(140%) blur(8px);
+      background:color-mix(in hsl,#ffffff 82%,transparent);
+      border-bottom:1px solid color-mix(in hsl,var(--beige) 55%,transparent);
+    }
+    .nav .nav__in{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; min-height:58px; }
+    .nav[data-scrolled="true"] .nav__in{ box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    .nav .nav__links{ display:flex; align-items:center; gap:.8rem; }
+    .nav .nav__links a[aria-current="page"]{
+      font-weight:700;
+      color:var(--nw-accent);
+    }
+    .nav .nav__links .btn{
+      --h:38px; display:inline-flex; align-items:center; justify-content:center; height:var(--h);
+      line-height:var(--h); padding:0 .9rem; border-radius:12px; font-weight:700; white-space:nowrap;
+    }
+    .nav__toggle{ border-radius:12px; border:1px solid var(--beige); background:#fff; padding:.35rem .6rem; }
+    .nav__toggle:focus-visible,
+    .nav .nav__links a:focus-visible{ outline:2px solid color-mix(in hsl,var(--nw-accent) 60%,#fff); outline-offset:2px; }
+    @media (max-width:900px){
+      .nav .nav__links{ display:none; }
+      .nav[aria-expanded="true"] .nav__links{
+        display:flex; flex-direction:column; align-items:stretch; gap:.6rem; padding:.8rem 0;
+      }
+      .nav .nav__links .btn{ width:100%; }
+    }
+
+    /* Hero strip */
+    .hero-menu{
+      margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); width:100vw;
+      background:linear-gradient(180deg,#fff,color-mix(in hsl,var(--nw-accent) 6%,#fff));
+      border-bottom:1px solid var(--beige);
+      padding:clamp(24px,5vw,40px) 0;
+    }
+    .hero-menu .wrap{
+      display:grid; gap:clamp(18px,4vw,28px); grid-template-columns:1.3fr .9fr; align-items:center;
+    }
+    @media (max-width:900px){
+      .hero-menu .wrap{ grid-template-columns:1fr; }
+    }
+    .hero-menu-img{
+      border-radius:var(--radius-xl);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background:#f4efe9;
+      aspect-ratio:4/3;
+    }
+    .hero-menu-img img{
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+
+    /* Chips + menu cards */
+    .chip-row{
+      display:flex; flex-wrap:wrap; gap:.5rem;
+      margin-bottom:1rem;
+    }
+    .chip{
+      border-radius:999px;
+      padding:.3rem .9rem;
+      border:1px solid var(--beige);
+      background:#fff;
+      font-size:.9rem;
+      cursor:pointer;
+      transition:background .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .chip[aria-pressed="true"]{
+      background:color-mix(in hsl,var(--nw-accent) 20%,#fff);
+      border-color:color-mix(in hsl,var(--nw-accent) 45%,#fff);
+      color:#3B2A22;
+      font-weight:600;
+    }
+
+    [data-menu]{
+      display:grid;
+      gap:12px;
+    }
+    .menu-card{
+      display:flex;
+      justify-content:space-between;
+      gap:1rem;
+      padding:12px 14px;
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--beige);
+      box-shadow:var(--shadow-sm);
+    }
+    .menu-line{
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      gap:.4rem;
+    }
+    .menu-desc{
+      margin:.2rem 0 0;
+      font-size:.92rem;
+      color:#6a6a6a;
+    }
+    .price{
+      white-space:nowrap;
+      font-weight:700;
+      color:var(--espresso);
+    }
+
+    /* Builder */
+    #builder{
+      background:var(--nw-surface);
+      border-radius:var(--radius-xl);
+      border:1px solid var(--beige);
+      box-shadow:var(--shadow);
+      padding:clamp(16px,3vw,22px);
+    }
+    .builder-grid{
+      display:grid;
+      gap:16px;
+      grid-template-columns:1.4fr 1fr;
+    }
+    @media (max-width:900px){
+      .builder-grid{ grid-template-columns:1fr; }
+    }
+    .builder-group{
+      margin-bottom:10px;
+    }
+    .builder-group legend{
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .builder-options{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.4rem;
+    }
+    .builder-pill{
+      border-radius:999px;
+      border:1px solid var(--beige);
+      background:#fff;
+      padding:.3rem .8rem;
+      font-size:.9rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+      cursor:pointer;
+    }
+    .builder-pill input{
+      accent-color:var(--nw-accent);
+    }
+    .builder-summary{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--beige);
+      padding:12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:.3rem;
+      font-size:.95rem;
+    }
+    .builder-summary strong{
+      font-weight:700;
+    }
+    .builder-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      margin-top:.7rem;
+    }
+
+    .menu-toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:.8rem;
+      margin-bottom:.8rem;
+      flex-wrap:wrap;
+    }
+
+    .no-js .reveal, .no-js .reveal-up, .no-js .reveal-fade{
+      opacity:1 !important; transform:none !important;
+    }
+  </style>
+
+  <script>document.documentElement.classList.remove('no-js');</script>
+</head>
+<body>
+  <a class="a11y-sr" href="#main">Skip to content</a>
+
+  <!-- NAV -->
+  <nav class="nav" data-nav aria-expanded="false">
+    <div class="wrap nav__in">
+      <a class="nav__brand" href="./" aria-label="Breeze Café — Home" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+          <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+          <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span>Breeze Café</span>
+      </a>
+      <div class="nav__links" id="primary-menu">
+        <a href="./">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./services.html" aria-current="page">Menu</a>
+        <a href="./contact.html" class="btn btn-shimmer">WhatsApp / Contact</a>
+      </div>
+      <button class="nav__toggle" data-toggle aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero-menu">
+    <div class="wrap">
+      <div class="stack gap-2">
+        <p class="pill">NeuroWeb Starter • Menu page</p>
+        <h1 class="h1">Menu & build-your-own drink</h1>
+        <p class="lead">
+          A realistic café menu layout with category filters and a fun drink builder.
+          Swap this content for your own services or products.
+        </p>
+        <div class="cluster">
+          <button id="jumpBuilder" class="btn btn-shimmer">Jump to drink builder →</button>
+        </div>
+      </div>
+      <div class="hero-menu-img">
+        <img src="./img/latte.jpg" alt="Selection of drinks at Breeze Café" loading="lazy" decoding="async" width="960" height="720">
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="section">
+    <div class="wrap">
+
+      <!-- CATEGORY FILTER + MENU LIST -->
+      <section class="stack gap-2" aria-label="Menu">
+        <div class="menu-toolbar">
+          <h2 class="h2" style="margin:0;">Our menu</h2>
+          <p class="muted" style="margin:0;">Tap a chip to filter by category.</p>
+        </div>
+
+        <div class="chip-row" aria-label="Filter menu by category">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="chip" type="button" data-filter="drinks" aria-pressed="false">Drinks</button>
+          <button class="chip" type="button" data-filter="food" aria-pressed="false">Food</button>
+          <button class="chip" type="button" data-filter="pastries" aria-pressed="false">Pastries</button>
+        </div>
+
+        <div data-menu>
+          <!-- Drinks -->
+          <article class="menu-card" data-cat="drinks">
+            <div>
+              <div class="menu-line">
+                <span>Flat White</span>
+              </div>
+              <p class="menu-desc">Double espresso with silky milk. Our everyday favourite.</p>
+            </div>
+            <div class="price">R38</div>
+          </article>
+
+          <article class="menu-card" data-cat="drinks">
+            <div>
+              <div class="menu-line">
+                <span>Caramel Latte</span>
+              </div>
+              <p class="menu-desc">Espresso, steamed milk and a swirl of caramel.</p>
+            </div>
+            <div class="price">R42</div>
+          </article>
+
+          <article class="menu-card" data-cat="drinks">
+            <div>
+              <div class="menu-line">
+                <span>Iced Americano</span>
+              </div>
+              <p class="menu-desc">Over ice, no sugar by default (add your own).</p>
+            </div>
+            <div class="price">R32</div>
+          </article>
+
+          <!-- Food -->
+          <article class="menu-card" data-cat="food">
+            <div>
+              <div class="menu-line">
+                <span>Halloumi & Avo Toast</span>
+              </div>
+              <p class="menu-desc">Sourdough, grilled halloumi, smashed avo, lemon and herbs.</p>
+            </div>
+            <div class="price">R75</div>
+          </article>
+
+          <article class="menu-card" data-cat="food">
+            <div>
+              <div class="menu-line">
+                <span>Breakfast Roll</span>
+              </div>
+              <p class="menu-desc">Soft roll with scrambled egg, cheese and tomato chutney.</p>
+            </div>
+            <div class="price">R58</div>
+          </article>
+
+          <!-- Pastries -->
+          <article class="menu-card" data-cat="pastries">
+            <div>
+              <div class="menu-line">
+                <span>Chocolate Croissant</span>
+              </div>
+              <p class="menu-desc">Flaky butter pastry with melted chocolate inside.</p>
+            </div>
+            <div class="price">R28</div>
+          </article>
+
+          <article class="menu-card" data-cat="pastries">
+            <div>
+              <div class="menu-line">
+                <span>Cinnamon Bun</span>
+              </div>
+              <p class="menu-desc">Soft, sticky and baked fresh in the morning.</p>
+            </div>
+            <div class="price">R30</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- BUILDER -->
+      <section class="section" aria-label="Build your drink">
+        <div class="stack gap-2">
+          <h2 class="h2">Build your own drink</h2>
+          <p class="muted" style="margin:0;">
+            Adapt this for “build your package”, “choose your treatment” or any other custom combo.
+          </p>
+        </div>
+
+        <div id="builder" class="reveal-up" data-builder style="margin-top:1rem;">
+          <div class="builder-grid">
+            <form class="stack gap-1" aria-label="Drink builder">
+              <!-- Base -->
+              <fieldset class="builder-group">
+                <legend>1. Base</legend>
+                <div class="builder-options">
+                  <label class="builder-pill">
+                    <input type="radio" name="base" value="Flat White" data-price="38" checked>
+                    <span>Flat White</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="base" value="Latte" data-price="40">
+                    <span>Latte</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="base" value="Cappuccino" data-price="36">
+                    <span>Cappuccino</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="base" value="Mocha" data-price="44">
+                    <span>Mocha</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Size -->
+              <fieldset class="builder-group">
+                <legend>2. Size</legend>
+                <div class="builder-options">
+                  <label class="builder-pill">
+                    <input type="radio" name="size" value="Small" data-add="0" checked>
+                    <span>Small</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="size" value="Medium" data-add="4">
+                    <span>Medium +R4</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="size" value="Large" data-add="8">
+                    <span>Large +R8</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Milk -->
+              <fieldset class="builder-group">
+                <legend>3. Milk</legend>
+                <div class="builder-options">
+                  <label class="builder-pill">
+                    <input type="radio" name="milk" value="Full cream" data-add="0" checked>
+                    <span>Full cream</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="milk" value="Low fat" data-add="0">
+                    <span>Low fat</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="milk" value="Oat" data-add="4">
+                    <span>Oat +R4</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="radio" name="milk" value="Almond" data-add="4">
+                    <span>Almond +R4</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Extras -->
+              <fieldset class="builder-group">
+                <legend>4. Extras</legend>
+                <div class="builder-options">
+                  <label class="builder-pill">
+                    <input type="checkbox" name="extra" value="Extra Shot" data-add="6">
+                    <span>Extra shot +R6</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="checkbox" name="extra" value="Vanilla Syrup" data-add="5">
+                    <span>Vanilla syrup +R5</span>
+                  </label>
+                  <label class="builder-pill">
+                    <input type="checkbox" name="extra" value="Caramel Syrup" data-add="5">
+                    <span>Caramel syrup +R5</span>
+                  </label>
+                </div>
+              </fieldset>
+            </form>
+
+            <div class="builder-summary">
+              <div><strong>Summary</strong></div>
+              <div id="summaryText" class="muted">Select a drink to start</div>
+              <div><strong>Price</strong> <span id="priceText">R0</span></div>
+              <div class="muted" id="calorieText">~0 kcal</div>
+
+              <div class="builder-actions">
+                <button type="button" id="whBtn" class="btn btn-shimmer">Send order via WhatsApp</button>
+                <button type="button" id="copyBtn" class="btn-outline">Copy order text</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="wrap footer__in">
+      <div>
+        <a class="nav__brand" href="./" aria-label="Breeze Café" style="display:inline-flex;align-items:center;gap:.6rem;font-weight:900;color:var(--espresso);text-decoration:none;">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" width="22" height="22">
+            <path d="M46.5 10.8c-7.4-3.7-15.3 0-21 6.2-5.9 6.4-9.6 15.5-6.5 23.9 3 8.2 12.1 12.6 20.4 10.4 9.2-2.5 15.6-12.7 15.1-22.4-.4-7.5-3.9-14.2-8-18.1z" fill="#C88A3A"/>
+            <path d="M26 18c-3.3 5.7-4.3 13.2-.8 19.2 3.3 5.6 9.4 8.6 15.9 8.7" fill="none" stroke="#7A5328" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <span>Breeze Café</span>
+        </a>
+        <p class="muted" style="margin-top:.5rem;">A sample Starter Plan website coded from scratch to show speed, clarity and UX.</p>
+      </div>
+      <nav aria-label="Footer">
+        <strong class="h3" style="font-size:1rem;">Links</strong>
+        <ul class="tick" style="margin-top:.5rem;">
+          <li><a href="./">Home</a></li>
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./services.html" aria-current="page">Menu</a></li>
+          <li><a href="./contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <strong class="h3" style="font-size:1rem;">Contact</strong>
+        <p style="margin-top:.5rem;">
+          <a href="https://wa.me/27XXXXXXXXX" rel="noopener">WhatsApp</a><br>
+          <a href="mailto:hello@breezecafe.demo">hello@breezecafe.demo</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="wrap" style="display:flex;justify-content:space-between;gap:.6rem;">
+        <span>© Breeze Café • Starter demo</span>
+        <span class="muted">Powered by NeuroWeb Digital</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Utils + tiny interactions -->
+  <script src="../shared/js/utils.js" defer></script>
+  <script>
+    // NAV SHADOW + MOBILE TOGGLE
+    (function(){
+      const html = document.documentElement;
+      const nav  = document.querySelector('.nav');
+      const tog  = document.querySelector('[data-toggle]');
+      const cont = document.querySelector('[data-nav]');
+
+      if (nav){
+        const onScroll = () => {
+          nav.setAttribute('data-scrolled', window.scrollY > 6);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive:true });
+      }
+
+      if (tog && cont){
+        const linksContainer = document.getElementById('primary-menu');
+        tog.addEventListener('click', () => {
+          const isExpanded = tog.getAttribute('aria-expanded') === 'true';
+          const next = !isExpanded;
+          tog.setAttribute('aria-expanded', String(next));
+          cont.setAttribute('aria-expanded', String(next));
+          html.classList.toggle('menu-open', next);
+
+          if (linksContainer){
+            linksContainer.querySelectorAll('a').forEach(a => {
+              a.addEventListener('click', () => {
+                tog.setAttribute('aria-expanded','false');
+                cont.setAttribute('aria-expanded','false');
+                html.classList.remove('menu-open');
+              }, { once:true });
+            });
+          }
+        });
+      }
+    })();
+
+    // CATEGORY FILTER CHIPS (simple)
+    (function(){
+      const chips = Array.from(document.querySelectorAll('.chip'));
+      const items = Array.from(document.querySelectorAll('[data-menu] [data-cat]'));
+      if (!chips.length || !items.length) return;
+
+      function setFilter(cat){
+        chips.forEach(c => {
+          c.setAttribute('aria-pressed', String(c.dataset.filter === cat));
+        });
+        items.forEach(el => {
+          const match = (cat === 'all' || el.dataset.cat === cat);
+          el.hidden = !match;
+        });
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const cat = chip.dataset.filter || 'all';
+          setFilter(cat);
+        });
+      });
+
+      setFilter('all');
+    })();
+
+    // JUMP TO BUILDER BUTTON
+    (function(){
+      const btn = document.getElementById('jumpBuilder');
+      const target = document.getElementById('builder');
+      if (!btn || !target) return;
+      btn.addEventListener('click', () => {
+        target.scrollIntoView({ behavior:'smooth', block:'start' });
+      });
+    })();
+
+    // BUILD-YOUR-DRINK BUILDER
+    (function(){
+      const root = document.querySelector('[data-builder]');
+      if (!root) return;
+
+      const priceText   = document.getElementById('priceText');
+      const summaryText = document.getElementById('summaryText');
+      const calorieText = document.getElementById('calorieText');
+      if (!priceText || !summaryText || !calorieText) return;
+
+      const getChecked = (name) =>
+        root.querySelector(`[name="${name}"]:checked`);
+      const getExtras = () =>
+        Array.from(root.querySelectorAll('[name="extra"]:checked'));
+
+      const num = (v, fallback = 0) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : fallback;
+      };
+
+      function calc(){
+        const base = getChecked('base');
+        const size = getChecked('size');
+        const milk = getChecked('milk');
+
+        if (!base || !size || !milk){
+          priceText.textContent = 'R0';
+          summaryText.textContent = 'Select a drink to start';
+          calorieText.textContent = '~0 kcal';
+          return { price:0, sum:'' };
+        }
+
+        let price = num(base.dataset.price) +
+                    num(size.dataset.add) +
+                    num(milk.dataset.add);
+
+        // rough kcal estimate
+        let kcal = 80;
+        if (base.value === 'Mocha') kcal += 50;
+        if (size.value === 'Medium') kcal += 30;
+        if (size.value === 'Large')  kcal += 60;
+        if (milk.value === 'Almond' || milk.value === 'Oat') kcal -= 10;
+
+        const addOns = [];
+        getExtras().forEach(x => {
+          price += num(x.dataset.add);
+          if (String(x.value).includes('Extra Shot')) kcal += 8;
+          if (String(x.value).includes('Syrup'))      kcal += 20;
+          addOns.push(x.value);
+        });
+
+        const summary =
+          [base.value, size.value, milk.value]
+            .filter(Boolean)
+            .join(' • ') +
+          (addOns.length ? ' • ' + addOns.join(', ') : '');
+
+        priceText.textContent   = 'R' + price;
+        summaryText.textContent = summary;
+        calorieText.textContent = `~${kcal} kcal (est.)`;
+
+        return { price, sum:summary };
+      }
+
+      // initial run
+      calc();
+
+      // react to changes
+      root.addEventListener('change', calc);
+      root.addEventListener('input', calc);
+
+      // WhatsApp button
+      const whBtn = document.getElementById('whBtn');
+      if (whBtn){
+        whBtn.addEventListener('click', () => {
+          const { price, sum } = calc();
+          if (!sum) return;
+          const msg = encodeURIComponent(
+            `Order for Breeze Café:\n${sum}\nTotal: R${price}`
+          );
+          window.location.href = `https://wa.me/27XXXXXXXXX?text=${msg}`;
+        });
+      }
+
+      // Copy button
+      const copyBtn = document.getElementById('copyBtn');
+      if (copyBtn){
+        copyBtn.addEventListener('click', async () => {
+          const { price, sum } = calc();
+          if (!sum) return;
+          const text = `Order for Breeze Café: ${sum} — Total: R${price}`;
+
+          try{
+            if (navigator.clipboard && navigator.clipboard.writeText){
+              await navigator.clipboard.writeText(text);
+              alert('Order copied 👌');
+            } else {
+              window.prompt('Copy this order:', text);
+            }
+          } catch(e){
+            window.prompt('Copy this order:', text);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
